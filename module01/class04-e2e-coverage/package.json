@@ -1,0 +1,23 @@
+{
+  "name": "class04-e2e-coverage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/api.js",
+    "test": "npx mocha tests/*.test.js",
+    "test:dev": "npx mocha -w tests/*.test.js",
+    "test:cov": "npx nyc mocha tests/*.test.js"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "keywords": [],
+  "author": "tiagosouzac",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
+    "supertest": "^6.3.3"
+  }
+}
