@@ -1,0 +1,19 @@
+{
+  "name": "tdd-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "seed": "node ./seed",
+    "test": ""
+  },
+  "engines": {
+    "node": "18"
+  },
+  "keywords": [],
+  "author": "tiagosouzac",
+  "license": "ISC",
+  "dependencies": {
+    "faker": "^5.1.0"
+  }
+}
