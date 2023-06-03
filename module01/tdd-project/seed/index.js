@@ -6,7 +6,7 @@ const CarCategory = require("../src/entities/car-category")
 const Customer = require("../src/entities/customer")
 
 const seederBaseFolder = join(__dirname, "..", "database")
-const ITEMS_AMOUNT = 2
+const ITEMS_AMOUNT = 3
 
 const carCategory = new CarCategory({
   id: faker.random.uuid(),
