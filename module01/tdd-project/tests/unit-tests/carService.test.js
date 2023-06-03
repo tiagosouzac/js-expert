@@ -3,6 +3,7 @@ const { describe, it, before, beforeEach, afterEach } = require("mocha")
 const { expect } = require("chai")
 const sinon = require("sinon")
 const CarService = require("../../src/services/carService")
+const Transaction = require("../../src/entities/transaction")
 
 const carsDatabase = join(__dirname, "..", "..", "database", "cars.json")
 
@@ -90,5 +91,65 @@ describe("CarService Suite Tests", () => {
     expect(result, "result should be the expected car").to.be.deep.equal(
       expected
     )
+  })
+
+  it("should calculate the final amount in real when a customer rent a car, given the car category, customer and number of days", async () => {
+    const customer = Object.create(mocks.validCustomer)
+    customer.age = 50
+
+    const carCategory = Object.create(mocks.validCarCategory)
+    carCategory.price = 37.6
+
+    const numberOfDays = 5
+
+    const expected = carService.currencyFormat.format(244.4)
+
+    sandbox
+      .stub(carService, "taxesBasedOnAge")
+      .get(() => [{ from: 40, to: 50, tax: 1.3 }])
+
+    const result = carService.calculateFinalPrice(
+      carCategory,
+      customer,
+      numberOfDays
+    )
+
+    expect(result).to.be.deep.equal(expected)
+  })
+
+  it("should return a transaction receipt given a customer and a car category", async () => {
+    const car = mocks.validCar
+
+    const carCategory = {
+      ...mocks.validCarCategory,
+      price: 37.6,
+      carIds: [car.id],
+    }
+
+    const customer = Object.create(mocks.validCustomer)
+    customer.age = 20
+
+    const numberOfDays = 5
+    const dueDate = "10 de novembro de 2020"
+    const now = new Date(2020, 10, 5)
+
+    sandbox.useFakeTimers(now.getTime())
+
+    sandbox
+      .stub(carService.carRepository, carService.carRepository.find.name)
+      .resolves(car)
+
+    const expectedAmount = carService.currencyFormat.format(206.8)
+
+    const expected = new Transaction({
+      customer,
+      car,
+      amount: expectedAmount,
+      dueDate,
+    })
+
+    const result = await carService.rent(customer, carCategory, numberOfDays)
+
+    expect(result).to.be.deep.equal(expected)
   })
 })
